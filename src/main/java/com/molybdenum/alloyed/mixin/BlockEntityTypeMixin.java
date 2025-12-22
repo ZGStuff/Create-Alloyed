@@ -1,5 +1,8 @@
 package com.molybdenum.alloyed.mixin;
 
+import com.molybdenum.alloyed.common.registry.ModBlocks;
+import com.simibubi.create.content.kinetics.simpleRelays.encased.EncasedCogwheelBlock;
+import com.simibubi.create.content.kinetics.simpleRelays.encased.EncasedShaftBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -15,11 +18,8 @@ import java.util.Objects;
 public class BlockEntityTypeMixin {
     @Inject(method = "isValid", at = @At(value = "RETURN"), cancellable = true)
     private void forceAllowAlloyed(BlockState arg, CallbackInfoReturnable<Boolean> cir) {
-        try {
-            if (Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(arg.getBlock())).getNamespace().equals("alloyed"))
-                cir.setReturnValue(true);
-        } catch (NullPointerException e) {
-            cir.setReturnValue(false);
+        if (arg.getBlock() instanceof EncasedCogwheelBlock && (arg.is(ModBlocks.STEEL_ENCASED_COGWHEEL.get()) || arg.is(ModBlocks.STEEL_ENCASED_LARGE_COGWHEEL.get()) || arg.is(ModBlocks.BRONZE_ENCASED_COGWHEEL.get()) || arg.is(ModBlocks.BRONZE_ENCASED_LARGE_COGWHEEL.get())) || arg.getBlock() instanceof EncasedShaftBlock && (arg.is(ModBlocks.STEEL_ENCASED_SHAFT.get()) || arg.is(ModBlocks.BRONZE_ENCASED_SHAFT.get()))) {
+            cir.setReturnValue(true);
         }
     }
 }
